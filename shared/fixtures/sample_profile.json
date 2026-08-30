@@ -1,0 +1,19 @@
+{
+  "applicant_id": "demo_applicant_1",
+  "language": "hi-IN",
+  "skills": ["security guarding"],
+  "years_experience": 2,
+  "location": {
+    "raw_text": "Whitefield, Bengaluru",
+    "area": "Whitefield",
+    "city": "Bengaluru"
+  },
+  "age": null,
+  "physical_capability_notes": [],
+  "availability": "immediately",
+  "shift_preference": "either",
+  "min_pay_expectation": 20000,
+  "pay_unit": "month",
+  "benefit_preferences": ["pf"],
+  "notes": null
+}

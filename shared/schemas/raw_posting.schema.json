@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RawPosting",
+  "description": "Output of Phase 3, input to Phase 4. Mirrors detailed-build-plan.md §0.2. EXTENSIONS pending team sign-off: source, source_job_id.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "posting_id",
+    "source",
+    "source_job_id",
+    "source_url",
+    "raw_title",
+    "raw_text",
+    "scraped_at"
+  ],
+  "properties": {
+    "posting_id": { "type": "string" },
+    "source": { "type": "string" },
+    "source_job_id": { "type": ["string", "null"] },
+    "source_url": { "type": "string", "format": "uri" },
+    "raw_title": { "type": "string" },
+    "raw_text": { "type": "string" },
+    "scraped_at": { "type": "string", "format": "date-time" }
+  }
+}

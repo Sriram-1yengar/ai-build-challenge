@@ -1,0 +1,49 @@
+{
+  "applicant_id": "demo_applicant_1",
+  "language": "hi-IN",
+  "shortlisted_postings": [
+    {
+      "posting_id": "sample-job-001",
+      "title": "Security Guard",
+      "employer": "Sample Employer",
+      "location": "Whitefield, Bengaluru",
+      "pay": "₹20,000–₹25,000 per month",
+      "requirements": [
+        "Previous security experience preferred"
+      ],
+      "benefits": [
+        "PF"
+      ],
+      "shift": "rotational",
+      "contact_method": "Apply on source website",
+      "source_url": "https://in.indeed.com/viewjob?jk=sample-job-001",
+      "summary": "This security-guard job is in Whitefield and states pay of ₹20,000 to ₹25,000 per month.",
+      "match_score": 95,
+      "match_reasons": [
+        "Matches the applicant's security-guard experience",
+        "Located in the applicant's preferred area",
+        "Meets the applicant's pay expectation"
+      ],
+      "pay_comparison": "above_market",
+      "missing_fields": [
+        "shift hours"
+      ],
+      "warnings": [],
+      "questions_to_ask": [
+        "How many hours is each rotational shift?"
+      ]
+    }
+  ],
+  "salary_benchmark": {
+    "role": "security guard",
+    "location": "Bengaluru, Karnataka",
+    "median_monthly_inr": 17525,
+    "source": "Indeed via Anakin Wire",
+    "retrieved_at": "2026-08-30T12:22:05+05:30"
+  },
+  "spoken_text": "यह सिक्योरिटी गार्ड की नौकरी व्हाइटफील्ड में है और वेतन बीस से पच्चीस हजार रुपये महीना बताया गया है।",
+  "audio_path": "output/demo_applicant_1.wav",
+  "used_cached_data": false,
+  "shortlisted_at": "2026-08-30T12:22:20+05:30",
+  "error": null
+}

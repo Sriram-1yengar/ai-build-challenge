@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JobSearchProfile",
+  "description": "Output of Phase 2, input to Phase 3. Mirrors detailed-build-plan.md §0.1. EXTENSIONS pending team sign-off: shift_preference, benefit_preferences; `language` narrowed from BCP-47 string to the two MVP languages.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "applicant_id",
+    "language",
+    "skills",
+    "years_experience",
+    "location",
+    "age",
+    "physical_capability_notes",
+    "availability",
+    "shift_preference",
+    "min_pay_expectation",
+    "pay_unit",
+    "benefit_preferences",
+    "notes"
+  ],
+  "properties": {
+    "applicant_id": { "type": "string" },
+    "language": { "enum": ["hi-IN", "kn-IN"] },
+    "skills": { "type": "array", "items": { "type": "string" } },
+    "years_experience": { "type": ["number", "null"] },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw_text", "area", "city"],
+      "properties": {
+        "raw_text": { "type": "string" },
+        "area": { "type": ["string", "null"] },
+        "city": { "type": ["string", "null"] }
+      }
+    },
+    "age": { "type": ["number", "null"] },
+    "physical_capability_notes": { "type": "array", "items": { "type": "string" } },
+    "availability": { "type": ["string", "null"] },
+    "shift_preference": { "enum": ["day", "night", "either", null] },
+    "min_pay_expectation": { "type": ["number", "null"] },
+    "pay_unit": { "enum": ["hour", "day", "month", "year", null] },
+    "benefit_preferences": {
+      "type": "array",
+      "items": { "enum": ["pf", "esi", "food", "accommodation"] }
+    },
+    "notes": { "type": ["string", "null"] }
+  }
+}

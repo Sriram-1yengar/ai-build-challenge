@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SalaryBenchmark",
+  "description": "Produced by Phase 3 alongside RawPosting[], consumed by Phase 4 for pay_comparison. Extension beyond detailed-build-plan.md §0 — pending team sign-off.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["role", "location", "median_monthly_inr", "source", "retrieved_at"],
+  "properties": {
+    "role": { "type": "string" },
+    "location": { "type": "string" },
+    "median_monthly_inr": { "type": ["number", "null"] },
+    "source": { "type": "string" },
+    "retrieved_at": { "type": "string", "format": "date-time" }
+  }
+}
