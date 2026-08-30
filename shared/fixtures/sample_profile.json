@@ -1,0 +1,17 @@
+{
+  "applicant_id": "demo_applicant_1",
+  "language": "hi-IN",
+  "skills": ["driving", "delivery driving"],
+  "years_experience": 4,
+  "location": {
+    "raw_text": "near Andheri East in Mumbai",
+    "area": "Andheri East",
+    "city": "Mumbai"
+  },
+  "age": 29,
+  "physical_capability_notes": ["comfortable lifting packages up to 20kg"],
+  "availability": "immediately",
+  "min_pay_expectation": 22000,
+  "pay_unit": "per month",
+  "notes": "has a commercial driving licence"
+}

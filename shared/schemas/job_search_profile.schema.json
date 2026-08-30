@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "job_search_profile.schema.json",
+  "title": "JobSearchProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "applicant_id",
+    "language",
+    "skills",
+    "years_experience",
+    "location",
+    "age",
+    "physical_capability_notes",
+    "availability",
+    "min_pay_expectation",
+    "pay_unit",
+    "notes"
+  ],
+  "properties": {
+    "applicant_id": { "type": "string", "minLength": 1 },
+    "language": { "type": "string", "minLength": 1 },
+    "skills": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "years_experience": { "type": ["number", "null"], "minimum": 0 },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw_text", "area", "city"],
+      "properties": {
+        "raw_text": { "type": "string" },
+        "area": { "type": ["string", "null"] },
+        "city": { "type": ["string", "null"] }
+      }
+    },
+    "age": { "type": ["number", "null"], "minimum": 0 },
+    "physical_capability_notes": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "availability": { "type": ["string", "null"] },
+    "min_pay_expectation": { "type": ["number", "null"], "minimum": 0 },
+    "pay_unit": { "type": ["string", "null"] },
+    "notes": { "type": ["string", "null"] }
+  }
+}
