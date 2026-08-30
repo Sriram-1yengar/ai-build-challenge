@@ -83,11 +83,11 @@ Phase 4 outputs a `ShortlistPosting[]` array of length N — call this `shortlis
 
 **Owner's job:** capture the applicant's spoken self-description and turn it into a clean English transcript.
 
-**Input:** live microphone audio from the applicant.
+**Input:** an applicant-entered `applicant_id` plus live microphone audio from the applicant. The runtime UI must not prefill or hard-code the applicant ID; hard-coded IDs such as `"demo_applicant_1"` are only suitable for isolated fixtures or automated tests.
 **Output:** `{ "applicant_id": "string", "language": "string", "transcript_en": "string" }` — hand this directly to Phase 2.
 
 ### Build steps
-1. Set up audio capture (browser mic → WebSocket, or file upload for simplicity if live isn't needed for MVP).
+1. Add a required, initially empty applicant ID input, then set up audio capture (browser mic → WebSocket, or file upload for simplicity if live isn't needed for MVP). Trim and validate the entered ID before recording, and pass it through unchanged in Phase 1's output.
 2. Connect to Sarvam's Speech-to-Text-Translate endpoint (batch REST API is simplest for a non-real-time MVP; use the realtime WS only if the team wants live partials).
    - Endpoint: `speech-to-text-translate` (batch) or `/speech-to-text-translate/ws` (streaming)
    - Auth: `API-SUBSCRIPTION-KEY` header
@@ -361,6 +361,6 @@ Return ONLY valid JSON:
 ## 8. Team Coordination Notes
 
 - Agree on **one LLM provider** (Claude or GPT) across all phases to avoid inconsistent JSON formatting behavior between prompts.
-- Agree on **applicant_id** generation up front (even a hardcoded `"demo_applicant_1"` is fine) so every phase can be tested independently without waiting on Phase 1.
+- Agree on **applicant_id** generation up front. Phase 1 must collect it as runtime input; a hardcoded `"demo_applicant_1"` may be used only in isolated fixtures so other phases can be tested independently without waiting on Phase 1.
 - Whoever owns Phase 3 should share the mock `raw_postings.json` fallback file with Phases 4-6 owners as early as possible, so those phases aren't blocked waiting on live scraping to work.
 - Keep all prompts and schemas in this doc as the source of truth — if a phase owner needs to deviate from a schema, flag it to the team before changing it, since downstream phases depend on the exact shape.

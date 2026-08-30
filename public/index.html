@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kaam Sahayak — Applicant Profile</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="card">
+      <p class="eyebrow">KAAM SAHAYAK · VOICE PROFILE</p>
+      <h1>Tell us about the work you want</h1>
+      <p class="prompt">Please share your skills, work experience, location, age, physical capabilities, availability, and expected pay. You can speak in your preferred Indian language.</p>
+
+      <label for="applicant-id">Applicant ID</label>
+      <input
+        id="applicant-id"
+        name="applicant_id"
+        type="text"
+        maxlength="100"
+        autocomplete="off"
+        placeholder="Enter your applicant ID"
+        aria-describedby="applicant-id-help"
+        required
+      />
+      <p id="applicant-id-help" class="field-help">This ID will be included with your voice intake.</p>
+
+      <section class="recorder" aria-live="polite">
+        <div class="timer" id="timer">00:00</div>
+        <p id="status">Ready to record (maximum 28 seconds)</p>
+        <div class="actions">
+          <button id="record" class="primary">Start recording</button>
+          <button id="stop" disabled>Stop</button>
+        </div>
+      </section>
+
+      <section id="result" class="result" hidden>
+        <p class="step-label">TRANSCRIPT</p>
+        <h2>What we heard</h2>
+        <p id="transcript"></p>
+        <p class="language">Detected language: <span id="language"></span></p>
+        <div id="profile-loading" class="profile-loading" hidden>Building your job profile with Gemini…</div>
+        <section id="profile" class="profile" hidden>
+          <p class="step-label">JOB PROFILE</p>
+          <h2>Your work profile</h2>
+          <dl id="profile-fields"></dl>
+        </section>
+        <div class="actions">
+          <button id="copy" disabled>Copy profile JSON</button>
+          <button id="again">Record again</button>
+        </div>
+        <details>
+          <summary>View structured JSON</summary>
+          <pre id="json"></pre>
+        </details>
+      </section>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
