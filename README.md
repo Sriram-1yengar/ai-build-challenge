@@ -14,8 +14,10 @@ src/                         server and application logic
   profile-schema.js          runtime contract validation
 public/                      browser UI
 test/                        automated tests
-shared/schemas/              cross-phase JSON schemas
-shared/fixtures/             contract fixtures
+shared/schemas/
+  job_search_profile_phase-1.schema.json
+shared/fixtures/
+  sample_profile_phase-1.json
 ```
 
 ## Setup

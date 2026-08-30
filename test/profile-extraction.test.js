@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { extractProfile } from "../src/profile-extraction.js";
+import { validateProfile } from "../src/profile-schema.js";
+
+const SHARED_SCHEMA_URL = new URL("../shared/schemas/job_search_profile_phase-1.schema.json", import.meta.url);
+const SHARED_FIXTURE_URL = new URL("../shared/fixtures/sample_profile_phase-1.json", import.meta.url);
 
 function mockClient(...outputs) {
   const calls = [];
@@ -15,6 +20,19 @@ function profile(overrides = {}) {
     pay_unit: null, notes: null, ...overrides,
   };
 }
+
+test("renamed shared schema and fixture remain valid and synchronized", async () => {
+  const [schema, fixture] = await Promise.all([
+    readFile(SHARED_SCHEMA_URL, "utf8").then(JSON.parse),
+    readFile(SHARED_FIXTURE_URL, "utf8").then(JSON.parse),
+  ]);
+  assert.equal(schema.$id, "job_search_profile_phase-1.schema.json");
+  assert.deepEqual(schema.required, [
+    "applicant_id", "language", "skills", "years_experience", "location", "age",
+    "physical_capability_notes", "availability", "min_pay_expectation", "pay_unit", "notes",
+  ]);
+  assert.deepEqual(validateProfile(fixture, fixture), []);
+});
 
 test("extracts a clean structured transcript with Gemini 3.6 Flash", async () => {
   const expected = profile({ skills: ["electrical work"], years_experience: 5, location: { raw_text: "Koramangala, Bangalore", area: "Koramangala", city: "Bangalore" }, age: 31, availability: "next Monday", min_pay_expectation: 900, pay_unit: "per day" });

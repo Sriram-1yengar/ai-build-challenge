@@ -15,8 +15,10 @@ ai-build-challenge/
 ├── test/
 │   └── profile-extraction.test.js
 ├── shared/
-│   ├── schemas/                   # machine-readable cross-phase contracts
-│   └── fixtures/                  # valid example payloads
+│   ├── schemas/
+│   │   └── job_search_profile_phase-1.schema.json
+│   └── fixtures/
+│       └── sample_profile_phase-1.json
 ├── detailed-build-plan.md         # product requirements and phase contracts
 ├── .env.example                   # all environment variable names
 ├── package.json                   # single dependency manifest
