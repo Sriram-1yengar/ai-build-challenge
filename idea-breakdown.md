@@ -1,4 +1,4 @@
-# Kaam Sahayak — Build Plan
+# Build Plan
 
 Voice-first blue-collar job matching assistant. Applicant speaks his profile → LLM structures it → Anakin scrapes/searches job portals → LLM summarizes top N postings → Sarvam voice agent reads them back and answers follow-up questions → applicant shortlists and calls employers directly.
 
