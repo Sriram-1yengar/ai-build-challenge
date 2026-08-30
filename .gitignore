@@ -2,3 +2,13 @@
 node_modules/
 .DS_Store
 
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Phase run artifacts
+phase*/out/
+phase*/run.log
+.backup-untracked/
