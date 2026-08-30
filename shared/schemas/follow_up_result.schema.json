@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FollowUpResult",
+  "description": "Output of one Phase 5 Q&A turn. Extension beyond detailed-build-plan.md §0 — pending team sign-off.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["answer_text", "referenced_posting_ids", "applicant_expressed_interest", "requires_live_refresh"],
+  "properties": {
+    "answer_text": { "type": "string" },
+    "referenced_posting_ids": { "type": "array", "items": { "type": "string" } },
+    "applicant_expressed_interest": { "type": "boolean" },
+    "requires_live_refresh": { "type": "boolean" }
+  }
+}

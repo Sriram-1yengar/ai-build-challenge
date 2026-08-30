@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FinalOutput",
+  "description": "Output of Phase 6. Mirrors detailed-build-plan.md §0.5. EXTENSIONS pending team sign-off: language, salary_benchmark, spoken_text, audio_path, used_cached_data, error.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "applicant_id",
+    "language",
+    "shortlisted_postings",
+    "salary_benchmark",
+    "spoken_text",
+    "audio_path",
+    "used_cached_data",
+    "shortlisted_at",
+    "error"
+  ],
+  "properties": {
+    "applicant_id": { "type": "string" },
+    "language": { "enum": ["hi-IN", "kn-IN"] },
+    "shortlisted_postings": {
+      "type": "array",
+      "items": { "$ref": "shortlist_posting.schema.json" }
+    },
+    "salary_benchmark": {
+      "oneOf": [{ "$ref": "salary_benchmark.schema.json" }, { "type": "null" }]
+    },
+    "spoken_text": { "type": ["string", "null"] },
+    "audio_path": { "type": ["string", "null"] },
+    "used_cached_data": { "type": "boolean" },
+    "shortlisted_at": { "type": "string", "format": "date-time" },
+    "error": { "type": ["string", "null"] }
+  }
+}

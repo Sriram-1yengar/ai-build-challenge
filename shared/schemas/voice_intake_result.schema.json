@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "VoiceIntakeResult",
+  "description": "Output of Phase 1 (voice intake), input to Phase 2. Extension beyond detailed-build-plan.md §0 — pending team sign-off.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["applicant_id", "language", "transcript_native", "transcript_en", "captured_at"],
+  "properties": {
+    "applicant_id": { "type": "string" },
+    "language": { "enum": ["hi-IN", "kn-IN"] },
+    "transcript_native": { "type": "string" },
+    "transcript_en": { "type": ["string", "null"] },
+    "captured_at": { "type": "string", "format": "date-time" }
+  }
+}

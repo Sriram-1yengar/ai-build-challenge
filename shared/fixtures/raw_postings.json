@@ -1,0 +1,11 @@
+[
+  {
+    "posting_id": "sample-job-001",
+    "source": "indeed",
+    "source_job_id": "sample-job-001",
+    "source_url": "https://in.indeed.com/viewjob?jk=sample-job-001",
+    "raw_title": "Security Guard",
+    "raw_text": "Security Guard in Whitefield. Full-time rotational shifts. Salary ₹20,000–₹25,000 per month. PF available.",
+    "scraped_at": "2026-08-30T12:22:00+05:30"
+  }
+]
