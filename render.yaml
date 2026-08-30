@@ -1,0 +1,66 @@
+services:
+  # Phase 1 + 2: voice intake (Sarvam STT) + profile extraction (Gemini)
+  - type: web
+    name: kaam-sahayak-intake
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+
+  # Phase 3 + 4: live job search (Anakin) + deterministic ranking / grounded LLM summaries
+  - type: web
+    name: kaam-sahayak-job-search
+    env: python
+    plan: free
+    rootDir: job-search-api
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ANAKIN_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+
+  # Phase 5: voice readback + conversational follow-up
+  - type: web
+    name: kaam-sahayak-voice-readback
+    env: python
+    plan: free
+    rootDir: phase5-voice-readback
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+
+  # The one URL judges actually open. Talks to the three services above.
+  - type: web
+    name: kaam-sahayak
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      # Render service URLs are deterministic from the service name above:
+      # https://<name>.onrender.com. If Render appends a suffix because a name
+      # is taken, update these three to match before/after the first deploy
+      # (Environment tab on the kaam-sahayak static site) and redeploy it.
+      - key: VITE_INTAKE_API_BASE
+        value: https://kaam-sahayak-intake.onrender.com
+      - key: VITE_SEARCH_API_BASE
+        value: https://kaam-sahayak-job-search.onrender.com
+      - key: VITE_API_BASE
+        value: https://kaam-sahayak-voice-readback.onrender.com

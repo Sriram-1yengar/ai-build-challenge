@@ -13,7 +13,9 @@ from google import genai
 
 load_dotenv()
 
-MODEL = "gemini-3.7-flash"
+# Matches the rest of the team's default (structure.md rule 4) — gemini-3.7-flash
+# isn't the agreed model and risks the same 404-deprecation failure hit earlier.
+MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
 _client = None
 
 SYSTEM = """You explain already-shortlisted job listings to a blue-collar worker in India.

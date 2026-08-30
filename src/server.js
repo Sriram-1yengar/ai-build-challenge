@@ -97,6 +97,15 @@ async function serveStatic(request, response) {
 
 export function createAppServer() {
   return createServer(async (request, response) => {
+    // Permissive dev/demo CORS so the separately-deployed frontend can call this
+    // API cross-origin, matching Phase 5's approach.
+    response.setHeader("access-control-allow-origin", "*");
+    response.setHeader("access-control-allow-methods", "GET, POST, OPTIONS");
+    response.setHeader("access-control-allow-headers", "content-type, x-applicant-id");
+    if (request.method === "OPTIONS") {
+      response.writeHead(204);
+      return response.end();
+    }
     if (request.method === "GET" && request.url === "/api/health") return sendJson(response, 200, { status: "ok", model: process.env.GEMINI_MODEL || DEFAULT_MODEL });
     if (request.method === "POST" && request.url === "/api/transcribe") return transcribe(request, response);
     if (request.method === "POST" && request.url === "/api/extract-profile") return extract(request, response);
@@ -106,5 +115,7 @@ export function createAppServer() {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  createAppServer().listen(PORT, "127.0.0.1", () => console.log(`Kaam Sahayak running at http://localhost:${PORT}`));
+  // Bind to all interfaces, not just loopback -- required for Render (and any
+  // host behind a reverse proxy) to route traffic to this process.
+  createAppServer().listen(PORT, "0.0.0.0", () => console.log(`Kaam Sahayak running on port ${PORT}`));
 }
