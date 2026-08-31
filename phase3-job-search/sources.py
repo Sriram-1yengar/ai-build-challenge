@@ -7,6 +7,48 @@ from wire import run_action, scrape
 QUERY = "security guard"
 CITY = "Bengaluru, Karnataka"
 
+# Phase 2 normalizes applicant skills to descriptive trade phrases (see
+# detailed-build-plan.md's Profile Extractor prompt), but job portals match
+# and title-gate on actual job-title vocabulary -- "electrical work" won't
+# text-match a posting titled "Electrician". This maps each known skill to
+# the terms a real posting title would use; first term is also what we search
+# portals with. Falls back to the raw skill text for anything not listed here.
+SKILL_TITLE_TERMS = {
+    "driving": ("driver", "driving"),
+    "electrical work": ("electrician", "electrical"),
+    "construction labor": ("construction", "labour", "laborer", "labourer"),
+    "construction": ("construction", "labour", "laborer", "labourer"),
+    "plumbing": ("plumber", "plumbing"),
+    "painting": ("painter", "painting"),
+    "cooking": ("cook", "chef", "kitchen"),
+    "delivery": ("delivery", "rider", "courier"),
+    "carpentry": ("carpenter", "carpentry"),
+    "masonry": ("mason", "masonry"),
+    "security": ("security guard", "watchman", "security", "gunman", "gatekeeper"),
+    "housekeeping": ("housekeeping", "housekeeper", "maid", "domestic help"),
+    "welding": ("welder", "welding"),
+}
+
+
+def title_terms_for_skill(skill: str) -> tuple[str, ...]:
+    return SKILL_TITLE_TERMS.get((skill or "").strip().lower(), ((skill or "").strip().lower(),))
+
+
+def search_query_for_skill(skill: str) -> str:
+    """The term to search job portals with -- portals match job-title
+    vocabulary better than Phase 2's descriptive phrasing."""
+    return title_terms_for_skill(skill)[0]
+
+
+def apna_slug(skill: str, city: str = "bangalore") -> str:
+    term = re.sub(r"[^a-z0-9]+", "-", search_query_for_skill(skill)).strip("-")
+    return f"{term}-jobs-in-{city}"
+
+
+def primary_skill(profile: dict) -> str:
+    skills = [s for s in (profile.get("skills") or []) if s and s.strip()]
+    return skills[0] if skills else QUERY
+
 
 def _payload(job: dict) -> dict:
     return job.get("data", {}).get("data", {})

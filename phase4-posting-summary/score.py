@@ -6,19 +6,43 @@ reproducible and cannot be silently reordered by a model.
 
 import parse as P
 
-GUARD_WORDS = ("security guard", "watchman", "guard", "gunman", "security personnel")
 SENIOR_WORDS = ("supervisor", "officer", "manager", "lead", "incharge")
 
+# Mirrors phase3-job-search/sources.py's SKILL_TITLE_TERMS -- kept duplicated
+# rather than imported so phase4 stays testable standalone against fixtures
+# (structure.md rule 3) without depending on phase3's package being on
+# sys.path. Job-title vocabulary for each Phase 2 normalized skill; falls
+# back to the raw skill text for anything not listed here.
+SKILL_TITLE_TERMS = {
+    "driving": ("driver", "driving"),
+    "electrical work": ("electrician", "electrical"),
+    "construction labor": ("construction", "labour", "laborer", "labourer"),
+    "construction": ("construction", "labour", "laborer", "labourer"),
+    "plumbing": ("plumber", "plumbing"),
+    "painting": ("painter", "painting"),
+    "cooking": ("cook", "chef", "kitchen"),
+    "delivery": ("delivery", "rider", "courier"),
+    "carpentry": ("carpenter", "carpentry"),
+    "masonry": ("mason", "masonry"),
+    "security": ("security guard", "watchman", "security", "gunman", "gatekeeper"),
+    "housekeeping": ("housekeeping", "housekeeper", "maid", "domestic help"),
+    "welding": ("welder", "welding"),
+}
 
-def role_points(title: str, has_experience: bool) -> tuple[int, str]:
+
+def _title_terms(skill: str) -> tuple[str, ...]:
+    return SKILL_TITLE_TERMS.get((skill or "").strip().lower(), ((skill or "").strip().lower(),))
+
+
+def role_points(title: str, skills: list[str], has_experience: bool) -> tuple[int, str]:
     t = (title or "").lower()
     senior = any(w in t for w in SENIOR_WORDS)
-    guard = any(w in t for w in GUARD_WORDS)
-    if guard and not senior:
-        return 35, "exact guard role"
-    if guard and senior and has_experience:
-        return 15, "adjacent supervisory role, applicant has experience"
-    return 0, "not a guard role"
+    matched = next((s for s in skills if any(term in t for term in _title_terms(s))), None)
+    if matched and not senior:
+        return 35, f"exact match for {matched!r}"
+    if matched and senior and has_experience:
+        return 15, f"adjacent supervisory role matching {matched!r}, applicant has experience"
+    return 0, "not a matching role"
 
 
 def location_points(loc: str | None, preferred_area: str | None) -> tuple[int, str]:
@@ -75,8 +99,9 @@ def score(posting: dict, profile: dict) -> dict:
     f = P.parse(posting)
     has_exp = (profile.get("years_experience") or 0) >= 1
     area = (profile.get("location") or {}).get("area")
+    skills = profile.get("skills") or []
 
-    r, r_why = role_points(posting.get("raw_title"), has_exp)
+    r, r_why = role_points(posting.get("raw_title"), skills, has_exp)
     l, l_why = location_points(f["location"] or posting.get("raw_title"), area)
     m = P.monthly(f["salary_min"], f["salary_unit"])
     p, p_why = pay_points(m, profile.get("min_pay_expectation"))

@@ -50,7 +50,7 @@ def job_search(req: JobSearchRequest):
     try:
         kept, _dropped = phase3_search.collect(req.profile)
         raw_postings = phase3_search.to_raw_postings(kept)
-        benchmark = phase3_search.to_benchmark()
+        benchmark = phase3_search.to_benchmark(req.profile)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Job search failed: {e}") from e
 

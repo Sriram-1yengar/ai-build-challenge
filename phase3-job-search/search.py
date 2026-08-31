@@ -19,8 +19,17 @@ def now() -> str:
 def collect(profile: dict) -> tuple[list[dict], list[dict]]:
     """Search every source, gate by title, keep Bengaluru only."""
     has_exp = (profile.get("years_experience") or 0) >= 1
+    skills = [s for s in (profile.get("skills") or []) if s and s.strip()] or [sources.QUERY]
+    primary_skill = sources.primary_skill(profile)
+    query = sources.search_query_for_skill(primary_skill)
+    slug = sources.apna_slug(primary_skill)
+    print(f"  searching skill={primary_skill!r} -> query={query!r} apna_slug={slug!r}")
+
     rows = []
-    for name, fn in (("indeed", sources.indeed_search), ("apna", sources.apna_search)):
+    for name, fn in (
+        ("indeed", lambda: sources.indeed_search(query=query)),
+        ("apna", lambda: sources.apna_search(slug=slug)),
+    ):
         try:
             got = fn()
             print(f"  {name}: {len(got)} rows")
@@ -29,7 +38,7 @@ def collect(profile: dict) -> tuple[list[dict], list[dict]]:
             print(f"  {name}: FAILED ({e})")
 
     blr = [r for r in rows if sources.in_bengaluru(r)]
-    kept, dropped = title_gate.apply(blr, has_experience=has_exp)
+    kept, dropped = title_gate.apply(blr, skills=skills, has_experience=has_exp)
 
     seen, deduped = set(), []
     for r in kept:
@@ -69,12 +78,13 @@ def to_raw_postings(rows: list[dict]) -> list[dict]:
     return out
 
 
-def to_benchmark() -> dict:
+def to_benchmark(profile: dict) -> dict:
     """SalaryBenchmark per shared/schemas/salary_benchmark.schema.json."""
-    s = sources.indeed_salary()
+    query = sources.search_query_for_skill(sources.primary_skill(profile))
+    s = sources.indeed_salary(title=query)
     monthly = next((x for x in s.get("salaries", []) if x.get("type") == "MONTHLY"), {})
     return {
-        "role": s.get("title") or sources.QUERY,
+        "role": s.get("title") or query,
         "location": (s.get("location") or {}).get("name") or "Bengaluru",
         "median_monthly_inr": round(monthly.get("median")) if monthly.get("median") else None,
         "source": "Indeed via Anakin Wire",
@@ -99,7 +109,7 @@ def main() -> int:
 
     print(f"\nfetching details for up to {MAX_DETAILS}...")
     postings = to_raw_postings(kept)
-    benchmark = to_benchmark()
+    benchmark = to_benchmark(profile)
 
     OUT.mkdir(exist_ok=True)
     (OUT / "raw_postings.json").write_text(
