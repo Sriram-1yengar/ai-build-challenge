@@ -9,17 +9,20 @@ their functions directly.
 **Input:** `{ "profile": <JobSearchProfile>, "use_llm": true }`
 **Output:** `{ "postings": <ShortlistPosting[]>, "raw_postings": <RawPosting[]>, "benchmark": <SalaryBenchmark> }`
 
-## Known scope limitation
+## Role coverage
 
-Phase 3's title gate (`phase3-job-search/filter.py`) and Phase 4's scoring
-(`phase4-posting-summary/score.py`) are both hard-coded to the **security
-guard** role in Bengaluru (`sources.py`'s `QUERY`/`CITY`, `GUARD_WORDS`,
-`SENIOR_WORDS`) — they don't yet read `profile.skills` to search/rank other
-trades. A profile for any other trade (electrician, driver, etc.) will search
-for security guard jobs anyway and likely rank nothing (`score.rank` drops any
-posting with zero role points). For a live demo, use a security-guard-shaped
-applicant profile (e.g. "I've done security guard work for two years, based in
-Bengaluru...") until this is generalized.
+Search query, Apna's category slug, and Phase 3/4's title-gate and ranking are
+all driven by `profile.skills[0]`, mapped from Phase 2's normalized skill
+phrasing to real job-title vocabulary (`sources.SKILL_TITLE_TERMS`, duplicated
+in `phase4-posting-summary/score.py` so each phase stays standalone-testable).
+Covers: driving, electrical work, construction labor/construction, plumbing,
+painting, cooking, delivery, carpentry, masonry, security, housekeeping,
+welding. A skill outside that list falls back to searching/matching on the
+raw skill text as given — works, but less precisely than a mapped trade.
+
+Location is still fixed to Bengaluru (`sources.py`'s `CITY`, and the
+Bengaluru-only post-search filter) regardless of `profile.location` —
+broadening that is a separate, not-yet-done change.
 
 ## Setup
 
